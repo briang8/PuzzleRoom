@@ -63,5 +63,5 @@ DoorController and DoorTrigger: Handle the automatic door open and close behavio
 
 Assets
 All visible environment and puzzle props are sourced from Kenney: 
-Kenney Furniture Kit : 
-Kenney Building Kit
+Kenney Furniture Kit : https://kenney.nl/assets/furniture-kit
+Kenney Building Kit : https://kenney.nl/assets/building-kit
