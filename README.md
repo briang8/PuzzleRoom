@@ -42,7 +42,7 @@ Win and Fail Conditions
 
 Win: All five puzzles are solved. The door unlocks, opens, and the player can walk out of the room.
 
-Fail: Pressing the button puzzle sequence in the wrong order triggers a failure for that puzzle, clearly logged and resetting its state. The player must correct mistakes before the puzzle can be solved.
+Fail: There's a timer of 100 secs fail to solve all puzzles in time and the game will reset.
 
 Scripts
 The project uses custom C# scripts to handle interaction, puzzle logic, progress tracking, and door control. Key scripts include:
@@ -59,7 +59,7 @@ LightSwitchInteract and LightPuzzle: Handle the light pattern puzzle.
 
 HeavyObject and WeightPlate: Handle the weight plate puzzle using a snap mechanic.
 
-DoorController and DoorTrigger: Handle the automatic door open and close behavior based on puzzle progress and player position.
+DoorController : Handle the automatic door open based on puzzle progress.
 
 Assets
 All visible environment and puzzle props are sourced from Kenney: 
