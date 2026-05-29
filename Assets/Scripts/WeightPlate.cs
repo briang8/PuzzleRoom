@@ -29,6 +29,10 @@ public class WeightPlate : MonoBehaviour
             isSolved = true;
             SetVisual(true);
             Debug.Log("WeightPlate: puzzle 5 solved (weight on plate).");
+
+            if (PuzzleManager.Instance != null)
+                PuzzleManager.Instance.ShowStatusMessage("Weight in place", 2f);
+
             PuzzleManager.Instance.SetPuzzleSolved(5, true);
         }
     }
@@ -42,6 +46,10 @@ public class WeightPlate : MonoBehaviour
             isSolved = false;
             SetVisual(false);
             Debug.Log("WeightPlate: puzzle 5 no longer solved (weight left).");
+
+            if (PuzzleManager.Instance != null)
+                PuzzleManager.Instance.ShowStatusMessage("Weight removed", 2f);
+
             PuzzleManager.Instance.SetPuzzleSolved(5, false);
         }
     }

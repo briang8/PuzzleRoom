@@ -5,7 +5,7 @@ public class ButtonPuzzle : MonoBehaviour
 {
     public static ButtonPuzzle Instance;
 
-    public int[] correctSequence = new int[] { 0, 1, 2 };
+    public int[] correctSequence = new int[] { 2, 0, 1 };
     public int maxInputs = 3;
 
     private List<int> inputs = new List<int>();
@@ -46,6 +46,10 @@ public class ButtonPuzzle : MonoBehaviour
             {
                 isSolved = true;
                 Debug.Log("Button puzzle solved");
+
+                if (PuzzleManager.Instance != null)
+                    PuzzleManager.Instance.ShowStatusMessage("Button puzzle solved", 2f);
+
                 PuzzleManager.Instance.SetPuzzleSolved(2, true);
             }
         }
@@ -55,14 +59,22 @@ public class ButtonPuzzle : MonoBehaviour
             {
                 isSolved = false;
                 Debug.Log("Button puzzle no longer solved");
+
                 PuzzleManager.Instance.SetPuzzleSolved(2, false);
+
+                if (PuzzleManager.Instance != null)
+                    PuzzleManager.Instance.ShowStatusMessage("Button puzzle incorrect", 2f);
             }
             else
             {
                 Debug.Log("Button puzzle failed attempt");
+
+                if (PuzzleManager.Instance != null)
+                    PuzzleManager.Instance.ShowStatusMessage("Attempt failed", 2f);
             }
         }
 
+        // Always reset inputs after checking
         inputs.Clear();
     }
 

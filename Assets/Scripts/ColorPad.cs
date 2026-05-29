@@ -2,70 +2,104 @@ using UnityEngine;
 
 public class ColorPad : MonoBehaviour
 {
-    public Color cubeColorToAccept = Color.red;
-    public Renderer padRenderer;
-    public Color inactiveColor = Color.gray;
-    public Color activeColor = Color.green;
-    public Color inactiveEmission = Color.black;
-    public Color activeEmission = Color.green;
+    [Header("Cube reference")]
+    public ColorCube targetCube;
 
-    bool isComplete = false;
+    [Header("Pad visuals")]
+    public Renderer padRenderer;
+    public Color activeColor = Color.green;
+    public Color inactiveColor = Color.gray;
+
+    [Header("Pad trigger")]
+    public Collider padTrigger;
+
+    bool cubeOnPad = false;
+    bool isSolved = false;
 
     void Start()
     {
         if (padRenderer == null)
             padRenderer = GetComponent<Renderer>();
 
-        if (padRenderer != null)
-        {
-            padRenderer.material.color = inactiveColor;
-            padRenderer.material.SetColor("_EmissionColor", inactiveEmission);
-            DynamicGI.SetEmissive(padRenderer, inactiveEmission);
-        }
+        if (padTrigger == null)
+            padTrigger = GetComponent<Collider>();
+
+        if (padTrigger != null)
+            padTrigger.isTrigger = true;
+
+        SetVisible(false);
+        SetColor(false);
     }
 
     void OnTriggerEnter(Collider other)
     {
         ColorCube cube = other.GetComponent<ColorCube>();
-        if (cube != null && cube.cubeColor == cubeColorToAccept && cube.isOnPad)
-        {
-            if (!isComplete)
-            {
-                isComplete = true;
-                SetActiveVisual(true);
-                PuzzleManager.Instance.SetPuzzleSolved(1, true);
-                Debug.Log("ColorPad puzzle solved");
-            }
-        }
+        if (cube == null || cube != targetCube) return;
+
+        cubeOnPad = true;
+        UpdateState();
     }
 
     void OnTriggerExit(Collider other)
     {
         ColorCube cube = other.GetComponent<ColorCube>();
-        if (cube != null && isComplete)
+        if (cube == null || cube != targetCube) return;
+
+        if (cube.isHeld) return;
+
+        cubeOnPad = false;
+        UpdateState();
+    }
+
+    void UpdateState()
+    {
+        if (cubeOnPad && !isSolved)
         {
-            isComplete = false;
-            SetActiveVisual(false);
-            PuzzleManager.Instance.SetPuzzleSolved(1, false);
-            Debug.Log("ColorPad puzzle no longer solved");
+            isSolved = true;
+            SetVisible(true);
+            SetColor(true);
+            Debug.Log("Color pad solved.");
+
+            if (PuzzleManager.Instance != null)
+            {
+                PuzzleManager.Instance.SetPuzzleSolved(1, true);
+                PuzzleManager.Instance.ShowStatusMessage("Color pad solved", 2f);
+            }
+        }
+        else if (!cubeOnPad && isSolved)
+        {
+            isSolved = false;
+            SetVisible(false);
+            SetColor(false);
+            Debug.Log("Color pad reset.");
+
+            if (PuzzleManager.Instance != null)
+            {
+                PuzzleManager.Instance.SetPuzzleSolved(1, false);
+                PuzzleManager.Instance.ShowStatusMessage("Color pad reset", 2f);
+            }
         }
     }
 
-    void SetActiveVisual(bool active)
+    public void NotifyCubeDropped()
     {
-        if (padRenderer == null) return;
+        if (!cubeOnPad)
+        {
+            Debug.Log("Cube dropped in wrong spot.");
+            if (PuzzleManager.Instance != null)
+                PuzzleManager.Instance.ShowStatusMessage("Wrong spot", 2f);
+        }
+    }
 
-        if (active)
-        {
-            padRenderer.material.color = activeColor;
-            padRenderer.material.SetColor("_EmissionColor", activeEmission);
-            DynamicGI.SetEmissive(padRenderer, activeEmission);
-        }
-        else
-        {
-            padRenderer.material.color = inactiveColor;
-            padRenderer.material.SetColor("_EmissionColor", inactiveEmission);
-            DynamicGI.SetEmissive(padRenderer, inactiveEmission);
-        }
+    void SetVisible(bool visible)
+    {
+        if (padRenderer != null)
+            padRenderer.enabled = visible;
+    }
+
+    void SetColor(bool active)
+    {
+        if (padRenderer != null)
+            padRenderer.material.color = active ? activeColor : inactiveColor;
     }
 }

@@ -37,12 +37,20 @@ public class BookPuzzle : MonoBehaviour
         {
             isSolved = true;
             Debug.Log("Book puzzle solved");
+
+            if (PuzzleManager.Instance != null)
+                PuzzleManager.Instance.ShowStatusMessage("Books aligned, puzzle solved!", 2f);
+
             PuzzleManager.Instance.SetPuzzleSolved(3, true);
         }
         else if (!nowSolved && isSolved)
         {
             isSolved = false;
             Debug.Log("Book puzzle no longer solved");
+
+            if (PuzzleManager.Instance != null)
+                PuzzleManager.Instance.ShowStatusMessage("Books misaligned", 2f);
+
             PuzzleManager.Instance.SetPuzzleSolved(3, false);
         }
     }
@@ -52,6 +60,8 @@ public class BookPuzzle : MonoBehaviour
         isSolved = false;
         book0CurrentStep = 0;
         book1CurrentStep = 0;
-        PuzzleManager.Instance.SetPuzzleSolved(3, false);
+
+        if (PuzzleManager.Instance != null)
+            PuzzleManager.Instance.SetPuzzleSolved(3, false);
     }
 }

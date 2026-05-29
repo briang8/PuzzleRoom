@@ -7,6 +7,7 @@ public class PuzzleManager : MonoBehaviour
     public static PuzzleManager Instance;
 
     public TextMeshProUGUI progressText;
+    public TextMeshProUGUI statusText;
 
     public int totalPuzzles = 5; // now 5 puzzles
 
@@ -32,14 +33,16 @@ public class PuzzleManager : MonoBehaviour
     }
 
     void Start()
-    {
-        RecalculateCompleted();
-        UpdateUI();
+{
+    RecalculateCompleted();
+    UpdateUI();
 
-        // At start: player outside, door should be open.
-        if (door != null)
-            door.OpenDoor();
-    }
+    if (statusText != null)
+        statusText.text = "";
+
+    if (door != null)
+        door.OpenDoor();
+}
 
     public void SetPuzzleSolved(int index, bool solved)
     {
@@ -107,4 +110,22 @@ public class PuzzleManager : MonoBehaviour
             door.OpenDoor();
         }
     }
+    
+    public void ShowStatusMessage(string message, float clearAfterSeconds = 0f)
+{
+    if (statusText == null) return;
+
+    statusText.text = message;
+
+    if (clearAfterSeconds > 0f)
+        StartCoroutine(ClearStatusAfterDelay(clearAfterSeconds));
 }
+
+IEnumerator ClearStatusAfterDelay(float delay)
+{
+    yield return new WaitForSeconds(delay);
+    if (statusText != null)
+        statusText.text = "";
+}
+
+    }
