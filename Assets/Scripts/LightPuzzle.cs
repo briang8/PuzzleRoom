@@ -9,6 +9,7 @@ public class LightPuzzle : MonoBehaviour
     public bool switch1Target = false;
     public bool switch2Target = true;
 
+    // Starting states — switches all begin ON to match LightSwitchInteract default
     bool switch0Current = true;
     bool switch1Current = true;
     bool switch2Current = true;
@@ -28,7 +29,6 @@ public class LightPuzzle : MonoBehaviour
         else if (index == 2) switch2Current = isOn;
 
         Debug.Log($"LightPuzzle: switch {index} now {(isOn ? "ON" : "OFF")}");
-
         CheckState();
     }
 
@@ -43,19 +43,34 @@ public class LightPuzzle : MonoBehaviour
         {
             isSolved = true;
             Debug.Log("Light puzzle solved");
-            PuzzleManager.Instance.SetPuzzleSolved(4, true);
+
+            if (PuzzleManager.Instance != null)
+                PuzzleManager.Instance.SetPuzzleSolved(4, true);
         }
         else if (!nowSolved && isSolved)
         {
             isSolved = false;
             Debug.Log("Light puzzle no longer solved");
-            PuzzleManager.Instance.SetPuzzleSolved(4, false);
+
+            if (PuzzleManager.Instance != null)
+                PuzzleManager.Instance.SetPuzzleSolved(4, false);
         }
     }
 
     public void ResetPuzzle()
     {
         isSolved = false;
-        PuzzleManager.Instance.SetPuzzleSolved(4, false);
+
+        // Reset every switch back to ON (the default starting state)
+        LightSwitchInteract[] switches = FindObjectsByType<LightSwitchInteract>(FindObjectsSortMode.None);
+        foreach (LightSwitchInteract sw in switches)
+            sw.ResetSwitch();
+
+        // Sync internal state back to default (all ON)
+        switch0Current = true;
+        switch1Current = true;
+        switch2Current = true;
+
+        Debug.Log("LightPuzzle: all switches reset.");
     }
 }

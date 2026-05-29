@@ -28,11 +28,20 @@ public class LightSwitchInteract : MonoBehaviour, IInteractable
         UpdateVisual();
 
         if (LightPuzzle.Instance != null)
-        {
             LightPuzzle.Instance.OnSwitchToggled(switchIndex, isOn);
-        }
 
         Debug.Log($"Switch {switchIndex} toggled. isOn = {isOn}");
+    }
+
+    // Called by LightPuzzle.ResetPuzzle() — snaps switch back to ON visually and logically
+    public void ResetSwitch()
+    {
+        isOn = true;
+
+        if (targetLight != null)
+            targetLight.enabled = true;
+
+        UpdateVisual();
     }
 
     void UpdateVisual()
@@ -41,8 +50,5 @@ public class LightSwitchInteract : MonoBehaviour, IInteractable
             switchRenderer.material.color = isOn ? onColor : offColor;
     }
 
-    public bool IsOn()
-    {
-        return isOn;
-    }
+    public bool IsOn() => isOn;
 }

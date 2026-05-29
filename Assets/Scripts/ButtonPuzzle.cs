@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public class ButtonPuzzle : MonoBehaviour
 {
     public static ButtonPuzzle Instance;

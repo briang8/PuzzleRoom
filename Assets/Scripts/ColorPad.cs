@@ -91,6 +91,19 @@ public class ColorPad : MonoBehaviour
         }
     }
 
+    // Called by PuzzleManager on full reset
+    public void ResetPuzzle()
+    {
+        cubeOnPad = false;
+        isSolved = false;
+        SetVisible(false);
+        SetColor(false);
+
+        // Snap cube back to its start position
+        if (targetCube != null)
+            targetCube.SnapTo(targetCube.startPosition);
+    }
+
     void SetVisible(bool visible)
     {
         if (padRenderer != null)

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class HeavyObject : MonoBehaviour, IInteractable
 {
-    public Transform platePosition;  // where it sits on the weight plate
-    public Transform startPosition;  // where it sits when not on plate
+    public Transform platePosition;
+    public Transform startPosition;
 
     public bool isOnPlate = false;
 
@@ -21,7 +21,6 @@ public class HeavyObject : MonoBehaviour, IInteractable
             startPosition = start.transform;
         }
 
-        // Ensure it starts at its startPosition
         SnapTo(startPosition);
         EnablePhysics(false);
     }
@@ -31,20 +30,19 @@ public class HeavyObject : MonoBehaviour, IInteractable
         isOnPlate = !isOnPlate;
 
         if (isOnPlate && platePosition != null)
-        {
             SnapTo(platePosition);
-            EnablePhysics(false);
-        }
-        else
-        {
-            // Back to start
-            if (startPosition != null)
-                SnapTo(startPosition);
+        else if (startPosition != null)
+            SnapTo(startPosition);
 
-            EnablePhysics(false); // keep kinematic if you don't want it to fall
-        }
-
+        EnablePhysics(false);
         Debug.Log($"HeavyObject isOnPlate = {isOnPlate}");
+    }
+
+    public void ResetPuzzle()
+    {
+        isOnPlate = false;
+        SnapTo(startPosition);
+        EnablePhysics(false);
     }
 
     void SnapTo(Transform target)
@@ -55,7 +53,6 @@ public class HeavyObject : MonoBehaviour, IInteractable
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
         }
-
         transform.position = target.position;
         transform.rotation = target.rotation;
     }

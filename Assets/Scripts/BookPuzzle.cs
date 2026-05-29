@@ -23,7 +23,6 @@ public class BookPuzzle : MonoBehaviour
         else if (index == 1) book1CurrentStep = step;
 
         Debug.Log($"BookPuzzle: book {index} at step {step}");
-
         CheckState();
     }
 
@@ -39,9 +38,10 @@ public class BookPuzzle : MonoBehaviour
             Debug.Log("Book puzzle solved");
 
             if (PuzzleManager.Instance != null)
+            {
                 PuzzleManager.Instance.ShowStatusMessage("Books aligned, puzzle solved!", 2f);
-
-            PuzzleManager.Instance.SetPuzzleSolved(3, true);
+                PuzzleManager.Instance.SetPuzzleSolved(3, true);
+            }
         }
         else if (!nowSolved && isSolved)
         {
@@ -49,9 +49,10 @@ public class BookPuzzle : MonoBehaviour
             Debug.Log("Book puzzle no longer solved");
 
             if (PuzzleManager.Instance != null)
+            {
                 PuzzleManager.Instance.ShowStatusMessage("Books misaligned", 2f);
-
-            PuzzleManager.Instance.SetPuzzleSolved(3, false);
+                PuzzleManager.Instance.SetPuzzleSolved(3, false);
+            }
         }
     }
 
@@ -61,7 +62,11 @@ public class BookPuzzle : MonoBehaviour
         book0CurrentStep = 0;
         book1CurrentStep = 0;
 
-        if (PuzzleManager.Instance != null)
-            PuzzleManager.Instance.SetPuzzleSolved(3, false);
+        // Reset every BookRotate in the scene back to step 0
+        BookRotate[] books = FindObjectsByType<BookRotate>(FindObjectsSortMode.None);
+        foreach (BookRotate book in books)
+            book.ResetBook();
+
+        Debug.Log("BookPuzzle: all books reset.");
     }
 }
